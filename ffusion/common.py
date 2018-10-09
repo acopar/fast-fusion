@@ -12,7 +12,6 @@ import threading
 from scipy.sparse import csr_matrix, csc_matrix
 from ffusion.loader import *
 from ffusion.worker import *
-from ffusion.zengine import Zengine
 from mpi4py import MPI
 
 def nprand(x, y, dtype=np.float64, seed=42):
@@ -325,15 +324,6 @@ def fusion(func):
         
         engine.dtype = dtype
         
-        """
-        z = Zengine()
-        func(z, X, Xt, mask, G, S, TrX, k=k, max_iter=1)
-        print(z._locals.keys())
-        for key in z._locals:
-            if type(z._locals[key]) == type({}):
-                print("adding local", key)
-                engine._locals[key] = z._locals[key]
-        """
         dimensions = {'n': n, 'm': m, 'k': k, 'slices': slices}
         factors, err_history = func(engine, X, Xt, mask, (G, Gi), S, TrX, dimensions, k=k, max_iter=max_iter, verbose=verbose)
         
